@@ -1,20 +1,17 @@
 package net.himeki.mcmtfabric.serdes.filter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import net.himeki.mcmtfabric.MCMT;
 import net.himeki.mcmtfabric.config.BlockEntityLists;
-import net.himeki.mcmtfabric.config.GeneralConfig;
 import net.himeki.mcmtfabric.serdes.ISerDesHookType;
 import net.himeki.mcmtfabric.serdes.SerDesRegistry;
 import net.himeki.mcmtfabric.serdes.pools.ChunkLockPool;
 import net.himeki.mcmtfabric.serdes.pools.ISerDesPool;
 import net.himeki.mcmtfabric.serdes.pools.ISerDesPool.ISerDesOptions;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class LegacyFilter implements ISerDesFilter {
 

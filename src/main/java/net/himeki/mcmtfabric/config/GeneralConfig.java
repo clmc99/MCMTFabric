@@ -1,6 +1,5 @@
 package net.himeki.mcmtfabric.config;
 
-import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -124,27 +123,23 @@ public class GeneralConfig implements ConfigData {
 
     public static int getParallelism() {
         GeneralConfig config = MCMT.config;
-        switch (config.paraMaxMode) {
-            case Standard:
-                return config.paraMax <= 1 ?
-                        Runtime.getRuntime().availableProcessors() :
-                        Math.max(2, Math.min(Runtime.getRuntime().availableProcessors(), config.paraMax));
-            case Override:
-                return config.paraMax <= 1 ?
-                        Runtime.getRuntime().availableProcessors() :
-                        Math.max(2, config.paraMax);
-            case Reduction:
-                return Math.max(
-                        Runtime.getRuntime().availableProcessors() - Math.max(0, config.paraMax),
-                        2);
-        }
+        return switch (config.paraMaxMode) {
+            case Standard -> config.paraMax <= 1 ?
+                    Runtime.getRuntime().availableProcessors() :
+                    Math.max(2, Math.min(Runtime.getRuntime().availableProcessors(), config.paraMax));
+            case Override -> config.paraMax <= 1 ?
+                    Runtime.getRuntime().availableProcessors() :
+                    config.paraMax;
+            case Reduction -> Math.max(
+                    Runtime.getRuntime().availableProcessors() - Math.max(0, config.paraMax),
+                    2);
+        };
         // Unsure quite how this is "Reachable code" but ok I guess
-        return Runtime.getRuntime().availableProcessors();
     }
 
     public void loadTELists() {
         teWhiteListString.forEach(str -> {
-            Class<?> c = null;
+            Class<?> c;
             try {
                 c = Class.forName(str);
                 BlockEntityLists.teWhiteList.add(c);
@@ -154,7 +149,7 @@ public class GeneralConfig implements ConfigData {
         });
 
         teBlackListString.forEach(str -> {
-            Class<?> c = null;
+            Class<?> c;
             try {
                 c = Class.forName(str);
                 BlockEntityLists.teBlackList.add(c);

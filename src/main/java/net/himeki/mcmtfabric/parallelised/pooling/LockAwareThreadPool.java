@@ -18,9 +18,9 @@ public class LockAwareThreadPool extends AbstractExecutorService {
     private AtomicInteger liveThreads;
     private AtomicInteger blockedThreads;
     private ConcurrentLinkedDeque<Runnable> taskQueue;
-    private Map<LockAwareThread, LockAwareThreadState> threadSet = new ConcurrentHashMap<>();
+    private final Map<LockAwareThread, LockAwareThreadState> threadSet = new ConcurrentHashMap<>();
 
-    private Object waitPoint = new Object();
+    private final Object waitPoint = new Object();
 
     public enum LockAwareThreadState {
         PARK,

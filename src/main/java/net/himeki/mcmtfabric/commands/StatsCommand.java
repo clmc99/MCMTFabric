@@ -27,12 +27,11 @@ public class StatsCommand {
                 MutableText message = Text.literal("Stat calcs are disabled so stats are out of date");
                 cmdCtx.getSource().sendFeedback(() -> message, true);
             }
-            StringBuilder messageString = new StringBuilder("Current max threads " + mean(maxThreads, liveValues) + " (");
-            messageString.append("World:" + mean(maxWorlds, liveValues));
-            messageString.append(" Entity:" + mean(maxEntities, liveValues));
-            messageString.append(" TE:" + mean(maxTEs, liveValues));
-            messageString.append(" Env:" + mean(maxEnvs, liveValues) + ")");
-            MutableText message = Text.literal(messageString.toString());
+            String messageString = "Current max threads " + mean(maxThreads, liveValues) + " (" + "World:" + mean(maxWorlds, liveValues) +
+                    " Entity:" + mean(maxEntities, liveValues) +
+                    " TE:" + mean(maxTEs, liveValues) +
+                    " Env:" + mean(maxEnvs, liveValues) + ")";
+            MutableText message = Text.literal(messageString);
             cmdCtx.getSource().sendFeedback(() -> message, true);
             return 1;
         }).then(literal("toggle").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).executes(cmdCtx -> {
@@ -75,11 +74,11 @@ public class StatsCommand {
     // Thread Stats
     static final int samples = 100;
     static final int stepsPer = 35;
-    static int maxThreads[] = new int[samples];
-    static int maxWorlds[] = new int[samples];
-    static int maxTEs[] = new int[samples];
-    static int maxEntities[] = new int[samples];
-    static int maxEnvs[] = new int[samples];
+    static int[] maxThreads = new int[samples];
+    static int[] maxWorlds = new int[samples];
+    static int[] maxTEs = new int[samples];
+    static int[] maxEntities = new int[samples];
+    static int[] maxEnvs = new int[samples];
     static int currentSteps = 0;
     static int currentPos = 0;
     static int liveValues = 0;
@@ -163,7 +162,7 @@ public class StatsCommand {
                             if (currentSteps % stepsPer == 0) {
                                 float ticktime = -1;
                                 if (mcs != null && mcs.isRunning()) {
-                                    ticktime = mcs.getTickTime();
+                                    ticktime = mcs.getAverageTickTime();
                                 }
                                 float threadCount = mean(maxThreads, liveValues);
                                 long memory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();

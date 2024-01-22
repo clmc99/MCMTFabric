@@ -75,20 +75,18 @@ public class ConfigCommand {
                     StringBuilder messageString = new StringBuilder(
                             "MCMT is currently " + (config.disabled ? "disabled" : "enabled"));
                     if (!config.disabled) {
-                        messageString.append(" World:" + (config.disableWorld ? "disabled" : "enabled"));
-                        messageString.append(" Entity:" + (config.disableEntity ? "disabled" : "enabled"));
-                        messageString.append(" TE:" + (config.disableTileEntity ? "disabled"
-                                : "enabled" + (config.chunkLockModded ? "(ChunkLocking Modded)" : "")));
-                        messageString.append(" Env:" + (config.disableEnvironment ? "disabled" : "enabled"));
-                        messageString.append(" SCP:" + (config.disableChunkProvider ? "disabled" : "enabled"));
+                        messageString.append(" World:").append(config.disableWorld ? "disabled" : "enabled");
+                        messageString.append(" Entity:").append(config.disableEntity ? "disabled" : "enabled");
+                        messageString.append(" TE:").append(config.disableTileEntity ? "disabled"
+                                : "enabled" + (config.chunkLockModded ? "(ChunkLocking Modded)" : ""));
+                        messageString.append(" Env:").append(config.disableEnvironment ? "disabled" : "enabled");
+                        messageString.append(" SCP:").append(config.disableChunkProvider ? "disabled" : "enabled");
                     }
                     MutableText message = Text.literal(messageString.toString());
                     cmdCtx.getSource().sendFeedback(() -> message, true);
                     return 1;
                 }))
-                .then(literal("save").requires(cmdSrc -> {
-                    return cmdSrc.hasPermissionLevel(2);
-                }).executes(cmdCtx -> {
+                .then(literal("save").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).executes(cmdCtx -> {
                     MutableText message = Text.literal("Saving MCMT config to disk...");
                     cmdCtx.getSource().sendFeedback(() -> message, true);
                     AutoConfig.getConfigHolder(GeneralConfig.class).save();

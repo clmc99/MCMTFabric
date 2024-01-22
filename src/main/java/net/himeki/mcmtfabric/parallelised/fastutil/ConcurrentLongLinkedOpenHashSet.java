@@ -1,5 +1,6 @@
 package net.himeki.mcmtfabric.parallelised.fastutil;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -15,6 +16,7 @@ import it.unimi.dsi.fastutil.longs.LongSortedSet;
 
 public class ConcurrentLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
 
+    @Serial
     private static final long serialVersionUID = -5532128240738069111L;
 
     private final ConcurrentSkipListSet<Long> backing;
@@ -62,7 +64,7 @@ public class ConcurrentLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
     }
 
     public ConcurrentLongLinkedOpenHashSet(final long[] a, final int offset, final int length, final float f) {
-        this(length < 0 ? 0 : length, f);
+        this(Math.max(length, 0), f);
         LongArrays.ensureOffsetLength(a, offset, length);
         for (int i = 0; i < length; i++)
             add(a[offset + i]);
@@ -82,15 +84,14 @@ public class ConcurrentLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
 
     @Override
     public boolean add(final long k) {
-        boolean out = backing.add(k);
-		/*
+        /*
 		if (!firstDef) {
 			first = k;
 			firstDef = true;
 		}
 		last = k;
 		*/
-        return out;
+        return backing.add(k);
     }
 
     @Override
@@ -105,16 +106,14 @@ public class ConcurrentLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
 
     @Override
     public boolean addAndMoveToFirst(final long k) {
-        boolean out = backing.add(k);
         //first = k;
-        return out;
+        return backing.add(k);
     }
 
     @Override
     public boolean addAndMoveToLast(final long k) {
-        boolean out = backing.add(k);
         //last = k;
-        return out;
+        return backing.add(k);
     }
 
     @Override

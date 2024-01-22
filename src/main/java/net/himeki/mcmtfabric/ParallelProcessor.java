@@ -98,7 +98,6 @@ public class ParallelProcessor {
         if (!config.disabled && !config.disableWorld) {
             if (worldPhaser != null) {
                 LOGGER.warn("Multiple servers?");
-                return;
             } else {
                 tickStart = System.nanoTime();
                 isTicking.set(true);
@@ -110,18 +109,13 @@ public class ParallelProcessor {
 
     public static void callTick(ServerWorld serverworld, BooleanSupplier hasTimeLeft, MinecraftServer server) {
         if (config.disabled || config.disableWorld) {
-            try {
-                serverworld.tick(hasTimeLeft);
-            } catch (Exception e) {
-                throw e;
-            }
+            serverworld.tick(hasTimeLeft);
             return;
         }
         if (mcs != server) {
             LOGGER.warn("Multiple servers?");
             config.disabled = true;
             serverworld.tick(hasTimeLeft);
-            return;
         } else {
             String taskName = null;
             if (config.opsTracing) {
@@ -150,7 +144,6 @@ public class ParallelProcessor {
         if (!config.disabled && !config.disableWorld) {
             if (mcs != server) {
                 LOGGER.warn("Multiple servers?");
-                return;
             } else {
                 worldPhaser.arriveAndAwaitAdvance();
                 isTicking.set(false);
@@ -273,7 +266,7 @@ public class ParallelProcessor {
             }
             String taskName = null;
             if (config.opsTracing) {
-                taskName = "TETick: " + tte.toString() + "@" + tte.hashCode();
+                taskName = "TETick: " + tte + "@" + tte.hashCode();
                 currentTasks.add(taskName);
             }
             String finalTaskName = taskName;
@@ -297,10 +290,7 @@ public class ParallelProcessor {
     }
 
     public static boolean filterTE(BlockEntityTickInvoker tte) {
-        boolean isLocking = false;
-        if (BlockEntityLists.teBlackList.contains(tte.getClass())) {
-            isLocking = true;
-        }
+        boolean isLocking = BlockEntityLists.teBlackList.contains(tte.getClass());
         // Apparently a string starts with check is faster than Class.getPackage; who knew (I didn't)
         if (!isLocking && config.chunkLockModded && !tte.getClass().getName().startsWith("net.minecraft.block.entity.")) {
             isLocking = true;

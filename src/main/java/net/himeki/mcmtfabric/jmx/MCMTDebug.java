@@ -2,7 +2,6 @@ package net.himeki.mcmtfabric.jmx;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.himeki.mcmtfabric.DebugHookTerminator;
 import net.minecraft.util.math.ChunkPos;
 

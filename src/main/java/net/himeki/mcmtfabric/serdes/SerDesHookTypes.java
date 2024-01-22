@@ -7,7 +7,7 @@ public enum SerDesHookTypes implements ISerDesHookType {
     EntityTick(Entity.class),
     TETick(BlockEntityTicker.class);
 
-    Class<?> clazz;
+    final Class<?> clazz;
 
     SerDesHookTypes(Class<?> clazz) {
         this.clazz = clazz;

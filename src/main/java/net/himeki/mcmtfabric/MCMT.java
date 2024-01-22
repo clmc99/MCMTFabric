@@ -6,6 +6,7 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.himeki.mcmtfabric.commands.ConfigCommand;
 import net.himeki.mcmtfabric.commands.StatsCommand;
 import net.himeki.mcmtfabric.config.GeneralConfig;
@@ -33,6 +34,8 @@ public class MCMT implements ModInitializer {
         holder.load();  // Load again to run loadTELists() handler
         config = holder.getConfig();
 
+        modCompatibilityOverrides();
+
         if (System.getProperty("jmt.mcmt.jmx") != null) {
             JMXRegistration.register();
         }
@@ -49,5 +52,16 @@ public class MCMT implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> StatsCommand.resetAll());
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ConfigCommand.register(dispatcher));
 
+    }
+
+    private void modCompatibilityOverrides() {
+        if (this.isModLoaded("c2me")) {
+            config.disableChunkProvider = true;
+            config.disableMultiChunk = true;
+        }
+    }
+
+    private boolean isModLoaded(String modid) {
+        return FabricLoader.getInstance().isModLoaded(modid);
     }
 }

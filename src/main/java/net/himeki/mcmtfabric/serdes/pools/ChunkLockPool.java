@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class ChunkLockPool implements ISerDesPool {
 
-    public class CLPOptions implements ISerDesOptions {
+    public static class CLPOptions implements ISerDesOptions {
         int range;
 
         public int getRange() {

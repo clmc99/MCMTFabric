@@ -11,16 +11,8 @@ public class JMXRegistration {
             ObjectName debugName = new ObjectName("org.jmt.mcmt:type=MCMTDebug");
             MCMTDebug debugBean = new MCMTDebug();
             mbs.registerMBean(debugBean, debugName);
-        } catch (MalformedObjectNameException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InstanceAlreadyExistsException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (MBeanRegistrationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NotCompliantMBeanException e) {
+        } catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException |
+                 NotCompliantMBeanException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

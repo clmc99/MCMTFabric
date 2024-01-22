@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 
+import java.io.Serial;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -15,13 +16,14 @@ public class Long2ObjectOpenConcurrentHashMap<V> extends Long2ObjectOpenHashMap<
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -121514116954680057L;
 
     Map<Long, V> backing;
     V defaultReturn = null;
 
     public Long2ObjectOpenConcurrentHashMap() {
-        backing = new ConcurrentHashMap<Long, V>();
+        backing = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -182,18 +184,18 @@ public class Long2ObjectOpenConcurrentHashMap<V> extends Long2ObjectOpenHashMap<
 
     @Override
     public V computeIfAbsent(final long k, final java.util.function.LongFunction<? extends V> mappingFunction) {
-        return backing.computeIfAbsent(k, (llong) -> mappingFunction.apply(llong));
+        return backing.computeIfAbsent(k, mappingFunction::apply);
     }
 
     public V computeIfAbsent(final Long k, final java.util.function.LongFunction<? extends V> mappingFunction) {
-        return backing.computeIfAbsent(k, (llong) -> mappingFunction.apply(llong));
+        return backing.computeIfAbsent(k, mappingFunction::apply);
     }
 
     @Override
     public V computeIfAbsentPartial(final long key, final Long2ObjectFunction<? extends V> mappingFunction) {
         if (!mappingFunction.containsKey(key))
             return defaultReturn;
-        return backing.computeIfAbsent(key, (llong) -> mappingFunction.apply(llong));
+        return backing.computeIfAbsent(key, mappingFunction);
     }
 
     @Override
@@ -217,7 +219,7 @@ public class Long2ObjectOpenConcurrentHashMap<V> extends Long2ObjectOpenHashMap<
 
     @Override
     public ObjectSet<Map.Entry<Long, V>> entrySet() {
-        return new FastUtilHackUtil.ConvertingObjectSet<java.util.Map.Entry<Long, V>, java.util.Map.Entry<Long, V>>(backing.entrySet(), Function.identity(), Function.identity());
+        return new FastUtilHackUtil.ConvertingObjectSet<>(backing.entrySet(), Function.identity(), Function.identity());
     }
 
     @Override

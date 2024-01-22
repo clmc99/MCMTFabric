@@ -4,7 +4,6 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.*;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.file.NoFormatFoundException;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -14,6 +13,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SerDesConfig {
 
@@ -83,8 +83,8 @@ public class SerDesConfig {
         public Map<String, Object> getPoolParams() {
             try {
                 return poolParams.valueMap();
-            } catch (java.lang.NullPointerException npe) {
-                return new HashMap<String, Object>();
+            } catch (NullPointerException npe) {
+                return new HashMap<>();
             }
         }
     }
@@ -125,7 +125,7 @@ public class SerDesConfig {
     }
 
     private static final class ClassListValidator implements Predicate<Object> {
-        String validatorRegex = "^[a-z\\_]+(\\.[a-z0-9\\_]+)*((\\.[A-Z][A-Za-z0-9\\_]+($[A-Za-z0-9\\_]+)*)?|\\.\\*|\\.\\*\\*)\\$?([A-Z][A-Za-z0-9\\_]+($[A-Za-z0-9\\_]+)*)+$";
+        String validatorRegex = "^[a-z]+(\\.[a-z0-9]+)*((\\.[A-Z][A-Za-z0-9]+($[A-Za-z0-9]+)*)?|\\.\\*|\\.\\*\\*)\\$?([A-Z][A-Za-z0-9]+($[A-Za-z0-9]+)*)+$";
 
         @Override
         public boolean test(Object t) {
@@ -133,8 +133,7 @@ public class SerDesConfig {
                 return true;
             }
 
-            if (t instanceof List<?>) {
-                List<?> list = (List<?>) t;
+            if (t instanceof List<?> list) {
                 for (Object s : list) {
                     if (!(s instanceof String && ((String) s).matches(validatorRegex))) {
 //						System.out.println("Value: " + t.toString() + " | String: " + (s instanceof String) + " | Matches: " +
@@ -150,14 +149,11 @@ public class SerDesConfig {
     }
 
     private static final class ClassValidator implements Predicate<Object> {
-        String validatorRegex = "^[a-z\\_]+(\\.[a-z0-9\\_]+)*((\\.[A-Za-z0-9\\_]+(\\$[A-Za-z0-9\\_]+)*))?$";
+        String validatorRegex = "^[a-z]+(\\.[a-z0-9]+)*((\\.[A-Za-z0-9]+(\\$[A-Za-z0-9]+)*))?$";
 
         @Override
         public boolean test(Object s) {
-            if ((s instanceof String && ((String) s).matches(validatorRegex))) {
-                return true;
-            }
-            return false;
+            return s instanceof String && ((String) s).matches(validatorRegex);
         }
     }
 
@@ -170,23 +166,21 @@ public class SerDesConfig {
         pools = new HashMap<>();
         java.nio.file.Path cfgDir = FabricLoader.getInstance().getConfigDir();
         java.nio.file.Path serdesDir = cfgDir.resolve("mcmt-serdes");
-        if (Files.isDirectory(serdesDir)) {
-
-        } else {
+        if (!Files.isDirectory(serdesDir)) {
             try {
                 Files.createDirectory(serdesDir);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        try {
-            Files.walk(serdesDir).map(p -> {
+        try (Stream<java.nio.file.Path> pathStream = Files.walk(serdesDir)) {
+            pathStream.map(p -> {
                 try {
                     return FileConfig.of(p);
                 } catch (NoFormatFoundException nffe) {
                     return null;
                 }
-            }).filter(Predicates.notNull()).forEach(SerDesConfig::loadConfig);
+            }).filter(Objects::nonNull).forEach(SerDesConfig::loadConfig);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -197,8 +191,8 @@ public class SerDesConfig {
         String file = fc.getNioPath().getFileName().toString();
         List<Config> pool = fc.get("pools");
         List<Config> filter = fc.get("filters");
-        if (pool == null) pool = new ArrayList<Config>();
-        if (filter == null) filter = new ArrayList<Config>();
+        if (pool == null) pool = new ArrayList<>();
+        if (filter == null) filter = new ArrayList<>();
         filters.put(file, filter.stream()
                 .map(c -> OBJECT_CONVERTER.toObject(c, FilterConfig::new))
                 .collect(Collectors.toList()));
@@ -232,7 +226,7 @@ public class SerDesConfig {
         FilterConfig fc = new FilterConfig(priority, name, whitelist, blacklist, pool == null ? "LEGACY" : pool, Config.inMemory());
         FileConfig config = FileConfig.builder(saveTo).build();
         config.set("filters", Lists.newArrayList(OBJECT_CONVERTER.toConfig(fc, Config::inMemoryUniversal)));
-        System.out.println("Saving config to " + saveTo.toString() + " ...");
+        System.out.println("Saving config to " + saveTo + " ...");
         config.save();
         config.close();
     }

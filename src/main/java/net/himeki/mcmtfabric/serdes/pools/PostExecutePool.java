@@ -12,7 +12,7 @@ public class PostExecutePool implements ISerDesPool {
 
     private PostExecutePool() {}
 
-    Deque<Runnable> runnables = new ConcurrentLinkedDeque<Runnable>();
+    Deque<Runnable> runnables = new ConcurrentLinkedDeque<>();
 
     @Override
     public void serialise(Runnable task, Object o, BlockPos bp, World w, ISerDesOptions options) {

@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class SerDesRegistry {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Map<Class<?>, ISerDesFilter> EMPTYMAP = new ConcurrentHashMap<Class<?>, ISerDesFilter>();
+    private static final Map<Class<?>, ISerDesFilter> EMPTYMAP = new ConcurrentHashMap<>();
     private static final Set<Class<?>> EMPTYSET = ConcurrentHashMap.newKeySet();
 
     static Map<ISerDesHookType, Map<Class<?>, ISerDesFilter>> optimisedLookup;
@@ -44,15 +44,13 @@ public class SerDesRegistry {
     static Set<ISerDesHookType> hookTypes;
 
     static {
-        filters = new ArrayList<ISerDesFilter>();
-        optimisedLookup = new ConcurrentHashMap<ISerDesHookType, Map<Class<?>, ISerDesFilter>>();
-        whitelist = new ConcurrentHashMap<ISerDesHookType, Set<Class<?>>>();
+        filters = new ArrayList<>();
+        optimisedLookup = new ConcurrentHashMap<>();
+        whitelist = new ConcurrentHashMap<>();
         unknown = ConcurrentHashMap.newKeySet();
-        hookTypes = new HashSet<ISerDesHookType>();
+        hookTypes = new HashSet<>();
         //TODO do an event loop so that this is a thing
-        for (ISerDesHookType isdh : SerDesHookTypes.values()) {
-            hookTypes.add(isdh);
-        }
+        Collections.addAll(hookTypes, SerDesHookTypes.values());
     }
 
     private static final ISerDesFilter DEFAULT_FILTER = new DefaultFilter();
@@ -94,7 +92,7 @@ public class SerDesRegistry {
                 for (Class<?> i : rawTgt) {
                     if (sh.isTargetable(i)) {
                         optimisedLookup.computeIfAbsent(sh,
-                                k -> new ConcurrentHashMap<Class<?>, ISerDesFilter>()).put(i, f);
+                                k -> new ConcurrentHashMap<>()).put(i, f);
                         whitelist.computeIfAbsent(sh,
                                 k -> ConcurrentHashMap.newKeySet()).remove(i);
                     }
@@ -106,7 +104,7 @@ public class SerDesRegistry {
     }
 
     public static Map<ISerDesHookType, Set<Class<?>>> group(Set<Class<?>> set) {
-        Map<ISerDesHookType, Set<Class<?>>> out = new ConcurrentHashMap<ISerDesHookType, Set<Class<?>>>();
+        Map<ISerDesHookType, Set<Class<?>>> out = new ConcurrentHashMap<>();
         for (Class<?> i : set) {
             for (ISerDesHookType sh : hookTypes) {
                 if (sh.isTargetable(i)) {
@@ -124,7 +122,7 @@ public class SerDesRegistry {
         return optimisedLookup.getOrDefault(isdh, EMPTYMAP).getOrDefault(clazz, DEFAULT_FILTER);
     }
 
-    static Map<String, ISerDesPool> registry = new ConcurrentHashMap<String, ISerDesPool>();
+    static Map<String, ISerDesPool> registry = new ConcurrentHashMap<>();
 
     public static ISerDesPool getPool(String name) {
         return registry.get(name);
@@ -137,7 +135,7 @@ public class SerDesRegistry {
     public static ISerDesPool getOrCreatePool(String name, Supplier<ISerDesPool> source) {
         return getOrCreatePool(name, i -> {
             ISerDesPool out = source.get();
-            out.init(i, new HashMap<String, Object>());
+            out.init(i, new HashMap<>());
             return out;
         });
     }
@@ -164,19 +162,8 @@ public class SerDesRegistry {
                         registry.put(pc.getName(), (ISerDesPool) o);
                         ((ISerDesPool) o).init(pc.getName(), pc.getInitParams());
                     }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (ClassNotFoundException | InvocationTargetException | IllegalArgumentException |
+                         IllegalAccessException | InstantiationException | SecurityException | NoSuchMethodException e) {
                     e.printStackTrace();
                 }
             }
@@ -188,10 +175,7 @@ public class SerDesRegistry {
         //TODO make not shit
         public static boolean filterTE(Object tte) {
             GeneralConfig config = MCMT.config;
-            boolean isLocking = false;
-            if (BlockEntityLists.teBlackList.contains(tte.getClass())) {
-                isLocking = true;
-            }
+            boolean isLocking = BlockEntityLists.teBlackList.contains(tte.getClass());
             // Apparently a string starts with check is faster than Class.getPackage; who knew (I didn't)
             if (!isLocking && config.chunkLockModded && !tte.getClass().getName().startsWith("net.minecraft.block.entity.")) {
                 isLocking = true;
@@ -227,7 +211,7 @@ public class SerDesRegistry {
                     }
                     if (mode == ClassMode.BLACKLIST) {
                         optimisedLookup.computeIfAbsent(hookType,
-                                        i -> new ConcurrentHashMap<Class<?>, ISerDesFilter>())
+                                        i -> new ConcurrentHashMap<>())
                                 .put(obj.getClass(), isdf);
                         isdf.serialise(task, obj, bp, w, hookType);
                         return;
@@ -261,7 +245,7 @@ public class SerDesRegistry {
 
                     AutoFilter.singleton().addClassToBlacklist(obj.getClass());
                     // TODO: this could leave a tick in an incomplete state. should the full exception be thrown?
-                    if (e instanceof RuntimeException) throw e;
+                    throw e;
                 }
             }
         }

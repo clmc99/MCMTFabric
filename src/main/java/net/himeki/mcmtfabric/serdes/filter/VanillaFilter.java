@@ -1,8 +1,6 @@
 package net.himeki.mcmtfabric.serdes.filter;
 
 import net.himeki.mcmtfabric.serdes.ISerDesHookType;
-
-import net.minecraft.block.entity.PistonBlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 

@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.longs.*;
 
+import java.io.Serial;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,6 +14,7 @@ public class Long2IntConcurrentNonLinkedOpenMap extends Long2IntLinkedOpenHashMa
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -2082212127278131631L;
 
     public Map<Long, Integer> backing = new ConcurrentHashMap<Long, Integer>();
@@ -238,17 +240,13 @@ public class Long2IntConcurrentNonLinkedOpenMap extends Long2IntLinkedOpenHashMa
 
 
     public int computeIfAbsent(final long k, final java.util.function.LongToIntFunction mappingFunction) {
-        Integer out =  backing.computeIfAbsent(k, (l) -> mappingFunction.applyAsInt(l));
-        if (out == null) {
-            return defRetValue;
-        }
-        return out;
+        return backing.computeIfAbsent(k, mappingFunction::applyAsInt);
     }
 
 
     public int computeIfAbsentNullable(final long k,
                                        final java.util.function.LongFunction<? extends Integer> mappingFunction) {
-        Integer out =  backing.computeIfAbsent(k, (l) -> mappingFunction.apply(l));
+        Integer out =  backing.computeIfAbsent(k, mappingFunction::apply);
         if (out == null) {
             return defRetValue;
         }

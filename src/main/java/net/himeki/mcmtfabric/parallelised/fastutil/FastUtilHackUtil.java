@@ -276,7 +276,7 @@ public class FastUtilHackUtil {
 
         @Override
         public boolean addAll(Collection<? extends it.unimi.dsi.fastutil.longs.Long2ObjectMap.Entry<T>> c) {
-            return backing.addAll(c.stream().map(back).collect(Collectors.toList()));
+            return backing.addAll(c.stream().map(back).toList());
         }
 
         @Override
@@ -400,7 +400,7 @@ public class FastUtilHackUtil {
         };
     }
 
-    private static <T> Map.Entry<Long, Byte> longByteEntryBackwards(Long2ByteMap.Entry entry) {
+    private static Map.Entry<Long, Byte> longByteEntryBackwards(Long2ByteMap.Entry entry) {
         return entry;
     }
 
@@ -443,28 +443,28 @@ public class FastUtilHackUtil {
         };
     }
 
-    private static <T> Map.Entry<Long, Long> longLongEntryBackwards(Long2LongMap.Entry entry) {
+    private static Map.Entry<Long, Long> longLongEntryBackwards(Long2LongMap.Entry entry) {
         return entry;
     }
 
     public static <T> ObjectSet<Int2ObjectMap.Entry<T>> entrySetIntWrap(Map<Integer, T> map) {
-        return new ConvertingObjectSet<Map.Entry<Integer, T>, Int2ObjectMap.Entry<T>>(map.entrySet(), FastUtilHackUtil::intEntryForwards, FastUtilHackUtil::intEntryBackwards);
+        return new ConvertingObjectSet<>(map.entrySet(), FastUtilHackUtil::intEntryForwards, FastUtilHackUtil::intEntryBackwards);
     }
 
     public static <T> ObjectSet<Long2ObjectMap.Entry<T>> entrySetLongWrap(Map<Long, T> map) {
-        return new ConvertingObjectSet<Map.Entry<Long, T>, Long2ObjectMap.Entry<T>>(map.entrySet(), FastUtilHackUtil::longEntryForwards, FastUtilHackUtil::longEntryBackwards);
+        return new ConvertingObjectSet<>(map.entrySet(), FastUtilHackUtil::longEntryForwards, FastUtilHackUtil::longEntryBackwards);
     }
 
     public static <T> it.unimi.dsi.fastutil.longs.Long2ObjectMap.FastEntrySet<T> entrySetLongWrapFast(Map<Long, T> map) {
-        return new ConvertingObjectSetFast<Map.Entry<Long, T>, T>(map.entrySet(), FastUtilHackUtil::longEntryForwards, FastUtilHackUtil::longEntryBackwards);
+        return new ConvertingObjectSetFast<>(map.entrySet(), FastUtilHackUtil::longEntryForwards, FastUtilHackUtil::longEntryBackwards);
     }
 
     public static ObjectSet<Long2ByteMap.Entry> entrySetLongByteWrap(Map<Long, Byte> map) {
-        return new ConvertingObjectSet<Map.Entry<Long, Byte>, Long2ByteMap.Entry>(map.entrySet(), FastUtilHackUtil::longByteEntryForwards, FastUtilHackUtil::longByteEntryBackwards);
+        return new ConvertingObjectSet<>(map.entrySet(), FastUtilHackUtil::longByteEntryForwards, FastUtilHackUtil::longByteEntryBackwards);
     }
 
     public static ObjectSet<Long2LongMap.Entry> entrySetLongLongWrap(Map<Long, Long> map) {
-        return new ConvertingObjectSet<Map.Entry<Long, Long>, Long2LongMap.Entry>(map.entrySet(), FastUtilHackUtil::longLongEntryForwards, FastUtilHackUtil::longLongEntryBackwards);
+        return new ConvertingObjectSet<>(map.entrySet(), FastUtilHackUtil::longLongEntryForwards, FastUtilHackUtil::longLongEntryBackwards);
     }
 
 

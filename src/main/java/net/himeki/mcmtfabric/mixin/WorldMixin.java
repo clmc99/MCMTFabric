@@ -23,8 +23,7 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
 
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private void postEntityPreBlockEntityTick(CallbackInfo ci) {
-        if ((Object) this instanceof ServerWorld) {
-            ServerWorld thisWorld = (ServerWorld) (Object) this;
+        if ((Object) this instanceof ServerWorld thisWorld) {
             ParallelProcessor.postEntityTick(thisWorld);
             ParallelProcessor.preBlockEntityTick(thisWorld);
         }
@@ -32,8 +31,7 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
 
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;pop()V"))
     private void postBlockEntityTick(CallbackInfo ci) {
-        if ((Object) this instanceof ServerWorld) {
-            ServerWorld thisWorld = (ServerWorld) (Object) this;
+        if ((Object) this instanceof ServerWorld thisWorld) {
             ParallelProcessor.postBlockEntityTick(thisWorld);
         }
     }

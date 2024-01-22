@@ -49,7 +49,7 @@ public class GenericConfigFilter implements ISerDesFilter {
                     wcWhitelist.add("^" + s.replace(".", "\\.").replace("**", "+-/").replace("*", "[A-Za-z0-9$]*").replace("+-/", ".*") + "$");
                 }
             }
-            if (wcWhitelist.size() > 0)
+            if (!wcWhitelist.isEmpty())
                 regexWhitelist = Pattern.compile(String.join("|", wcWhitelist));
         }
         if (cfg.getBlacklist() != null) {
@@ -63,7 +63,7 @@ public class GenericConfigFilter implements ISerDesFilter {
                     wcBlacklist.add("^" + s.replace(".", "\\.").replace("**", "+-/").replace("*", "[A-Za-z0-9$]*").replace("+-/", ".*") + "$");
                 }
             }
-            if (wcBlacklist.size() > 0)
+            if (!wcBlacklist.isEmpty())
                 regexBlacklist = Pattern.compile(String.join("|", wcBlacklist));
         }
     }

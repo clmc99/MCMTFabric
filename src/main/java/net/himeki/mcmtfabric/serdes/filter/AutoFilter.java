@@ -19,7 +19,7 @@ public class AutoFilter implements ISerDesFilter {
     private static AutoFilter SINGLETON;
 
     private ISerDesPool pool;
-    private Set<Class<?>> blacklist = ConcurrentHashMap.newKeySet();
+    private final Set<Class<?>> blacklist = ConcurrentHashMap.newKeySet();
 
     public static AutoFilter singleton() {
         if (SINGLETON == null) SINGLETON = new AutoFilter();

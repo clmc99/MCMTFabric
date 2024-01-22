@@ -10,6 +10,7 @@ package net.himeki.mcmtfabric.parallelised;
  * Modified to actually implement List<E>
  */
 
+import java.io.Serial;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -667,6 +668,7 @@ public class ConcurrentDoublyLinkedList<E> extends AbstractCollection<E> impleme
 
 class Node<E> extends AtomicReference<Node<E>> {
 
+    @Serial
     private static final long serialVersionUID = 6640557564507962862L;
 
     private volatile Node<E> prev;

@@ -104,7 +104,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
 
         long i = ChunkPos.toLong(chunkX, chunkZ);
 
-        Chunk c = lookupChunk(i, requiredStatus, false);
+        Chunk c = lookupChunk(i, requiredStatus);
         if (c != null) {
             return c;
         }
@@ -116,7 +116,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
             // Multithreaded but still limit to 1 load op per chunk
             long[] locks = loadingChunkLock.lock(i, 0);
             try {
-                if ((c = lookupChunk(i, requiredStatus, false)) != null) {
+                if ((c = lookupChunk(i, requiredStatus)) != null) {
                     return c;
                 }
                 cl = super.getChunk(chunkX, chunkZ, requiredStatus, load);
@@ -125,7 +125,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
             }
         } else {
             synchronized (this) {
-                if (chunkCache.containsKey(new ChunkCacheAddress(i, requiredStatus)) && (c = lookupChunk(i, requiredStatus, false)) != null) {
+                if (chunkCache.containsKey(new ChunkCacheAddress(i, requiredStatus)) && (c = lookupChunk(i, requiredStatus)) != null) {
                     return c;
                 }
                 cl = super.getChunk(chunkX, chunkZ, requiredStatus, load);
@@ -135,7 +135,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
         return cl;
     }
 
-    public Chunk lookupChunk(long chunkPos, ChunkStatus status, boolean compute) {
+    public Chunk lookupChunk(long chunkPos, ChunkStatus status) {
         int oldAccess = access.getAndIncrement();
         if (access.get() < oldAccess) { // overflow
             clearCache();
@@ -192,7 +192,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
         chunkCache.clear(); // Doesn't resize but that's typically good
     }
 
-    protected class ChunkCacheAddress {
+    protected static class ChunkCacheAddress {
         protected long chunk_pos;
         protected int status;
         protected int hash;

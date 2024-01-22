@@ -1,5 +1,6 @@
 package net.himeki.mcmtfabric.parallelised.fastutil.sync;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -14,6 +15,7 @@ import it.unimi.dsi.fastutil.longs.LongSortedSet;
 
 public class SyncLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
 
+    @Serial
     private static final long serialVersionUID = -5532128240738069111L;
 
     public SyncLongLinkedOpenHashSet() {
@@ -57,7 +59,7 @@ public class SyncLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
     }
 
     public SyncLongLinkedOpenHashSet(final long[] a, final int offset, final int length, final float f) {
-        this(length < 0 ? 0 : length, f);
+        this(Math.max(length, 0), f);
         LongArrays.ensureOffsetLength(a, offset, length);
         for (int i = 0; i < length; i++)
             add(a[offset + i]);
