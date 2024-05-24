@@ -8,4 +8,4 @@ This mod is based on the amazing work on [JMT-MCMT](https://github.com/jediminer
 
 [cloth-config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) is needed as a dependency.
 
-If you want to send me some milk tea (I don't really like coffee) please send some XMR to `88R8LWHX7jj5zkC3iz88U29yDFAhdgKdQTbViPsbeVDvS6rHS6UTkR6WWqEDgkg8UjeorRDdD5uenBLgCHXxboVb8BTdpzH`. Happy playing! 
+If you want to send me some milk tea (I don't really like coffee) please send some XMR to `88R8LWHX7jj5zkC3iz88U29yDFAhdgKdQTbViPsbeVDvS6rHS6UTkR6WWqEDgkg8UjeorRDdD5uenBLgCHXxboVb8BTdpzH`. Happy playing!
